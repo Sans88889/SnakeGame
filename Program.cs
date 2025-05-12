@@ -22,19 +22,20 @@ class Program
 
         Random randomnummer = new Random();
 
-        Pixel hoofd = new Pixel
+        // Gracz 1
+        Pixel player1 = new Pixel
         {
             xPos = screenwidth / 2,
             yPos = screenheight / 2,
             schermKleur = ConsoleColor.Red
         };
+        string movement1 = "RIGHT";
 
-        string movement = "RIGHT";
         int score = 0;
 
         List<int> teljePositie = new List<int>();
-        teljePositie.Add(hoofd.xPos);
-        teljePositie.Add(hoofd.yPos);
+        teljePositie.Add(player1.xPos);
+        teljePositie.Add(player1.yPos);
 
         string obstacle = "*";
         int obstacleXpos = randomnummer.Next(1, screenwidth - 1);
@@ -58,7 +59,6 @@ class Program
                 Console.SetCursorPosition(i, screenheight - 1);
                 Console.Write("■");
             }
-
             for (int i = 0; i < screenheight; i++)
             {
                 Console.SetCursorPosition(0, i);
@@ -72,12 +72,7 @@ class Program
             Console.ForegroundColor = ConsoleColor.Yellow;
             Console.WriteLine("Score: " + score);
 
-            // Draw Snake Head
-            Console.ForegroundColor = hoofd.schermKleur;
-            Console.SetCursorPosition(hoofd.xPos, hoofd.yPos);
-            Console.Write("■");
-
-            // Draw Tail
+            // Rysuj ogon gracza 1
             Console.ForegroundColor = ConsoleColor.Green;
             for (int i = 2; i < teljePositie.Count; i += 2)
             {
@@ -85,71 +80,77 @@ class Program
                 Console.Write("■");
             }
 
-            // Read user input
+            // Obsługa klawiatury
             if (Console.KeyAvailable)
             {
                 ConsoleKeyInfo info = Console.ReadKey(true);
+
                 switch (info.Key)
                 {
                     case ConsoleKey.UpArrow:
-                        movement = "UP";
+                        movement1 = "UP";
                         break;
                     case ConsoleKey.DownArrow:
-                        movement = "DOWN";
+                        movement1 = "DOWN";
                         break;
                     case ConsoleKey.LeftArrow:
-                        movement = "LEFT";
+                        movement1 = "LEFT";
                         break;
                     case ConsoleKey.RightArrow:
-                        movement = "RIGHT";
+                        movement1 = "RIGHT";
                         break;
                 }
             }
 
-            // Move snake
-            switch (movement)
+            // Logika ruchu
+            switch (movement1)
             {
                 case "UP":
-                    hoofd.yPos--;
+                    player1.yPos--;
                     break;
                 case "DOWN":
-                    hoofd.yPos++;
+                    player1.yPos++;
                     break;
                 case "LEFT":
-                    hoofd.xPos--;
+                    player1.xPos--;
                     break;
                 case "RIGHT":
-                    hoofd.xPos++;
+                    player1.xPos++;
                     break;
             }
 
-            // Check collision with obstacle
-            if (hoofd.xPos == obstacleXpos && hoofd.yPos == obstacleYpos)
+            // Rysuj gracza 1
+            Console.ForegroundColor = player1.schermKleur;
+            Console.SetCursorPosition(player1.xPos, player1.yPos);
+            Console.Write("■");
+
+            // Kolizja z przeszkodą
+            if (player1.xPos == obstacleXpos && player1.yPos == obstacleYpos)
             {
                 score++;
                 obstacleXpos = randomnummer.Next(1, screenwidth - 1);
                 obstacleYpos = randomnummer.Next(1, screenheight - 1);
             }
 
-            // Add head position to tail
-            teljePositie.Insert(0, hoofd.xPos);
-            teljePositie.Insert(1, hoofd.yPos);
+            // Aktualizacja ogona
+            teljePositie.Insert(0, player1.xPos);
+            teljePositie.Insert(1, player1.yPos);
             if (teljePositie.Count > (score + 1) * 2)
             {
                 teljePositie.RemoveAt(teljePositie.Count - 1);
                 teljePositie.RemoveAt(teljePositie.Count - 1);
             }
 
-            // Collision with wall
-            if (hoofd.xPos == 0 || hoofd.xPos == screenwidth - 1 || hoofd.yPos == 0 || hoofd.yPos == screenheight - 1)
+            // Kolizja ze ścianą
+            if (player1.xPos == 0 || player1.xPos == screenwidth - 1 || player1.yPos == 0 || player1.yPos == screenheight - 1)
             {
                 GameOver(score);
             }
 
-            // Collision with tail
+            // Kolizja z ogonem
             for (int i = 2; i < teljePositie.Count; i += 2)
             {
-                if (hoofd.xPos == teljePositie[i] && hoofd.yPos == teljePositie[i + 1])
+                if (player1.xPos == teljePositie[i] && player1.yPos == teljePositie[i + 1])
                 {
                     GameOver(score);
                 }
