@@ -1,0 +1,8 @@
+﻿# Lista zadań do gry Snake w C#
+
+- [ ] Implementacja ruchu węża
+- [ ] Obsługa jedzenia i przyrost ogona
+- [ ] Obsługa klawiatury
+- [ ] Kolizje ze ścianą i ogonem
+- [ ] Wyświetlanie punktacji
+- [ ] Dokumentacja i README
